@@ -5,22 +5,22 @@ Release Date: 2017/12/29
 Author: DreadPirate
 
 Short Description:
-This script takes editor-based groups and respawns them when the group is eliminated
+This script takes editor-based groups and respawns them when the group is eliminated.
 
 Description:
-This script takes editor-based groups and respawns them when the group is eliminated
-The group's waypoints are saved
-The group's loadouts are saved
-Multiple respawn positions are available
-Spawning can be synchronized with a trigger to create groups when needed
-The number of respawns can be set, or it can respawn infinitely
-The respawn delay can be a fixed number or a range
-A pause radius is available so groups don't spawn on top of other units
-An exit trigger can be used to exit the script early
-Integrated GAIA support
+This script takes editor-based groups and respawns them when the group is eliminated.
+The group's waypoints are saved.
+The group's loadouts are saved.
+Multiple respawn positions are available.
+Spawning can be synchronized with a trigger to create groups when needed.
+The number of respawns can be set, or it can respawn infinitely.
+The respawn delay can be a fixed number or a range.
+A pause radius is available so groups don't spawn on top of other units.
+An exit trigger can be used to exit the script early.
+Integrated GAIA support.
 https://forums.bistudio.com/topic/172933-mission-template-stand-alone-gaia-make-missions-fast-by-using-mcc-gaia-engine/
 A custom init string can be used to run your favourite patrol script, attack script, gear script, etc.
-Units are added to Zeus automatically
+Units are added to Zeus automatically.
 Use it for ambient combat, waves of attackers, random patrols or whatever else you think of.....
 
 Installation / Usage:
