@@ -1,0 +1,5 @@
+class CfgFunctions
+{
+	#include "gaia\cfgFunctions.hpp"
+	#include "jebus\cfgFunctions.hpp"
+}
