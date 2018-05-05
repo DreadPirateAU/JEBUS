@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.41
-Release Date: 2017/12/29
+Version: 1.42
+Release Date: 2018/5/6
 Author: DreadPirate
 
 Short Description:
@@ -135,3 +135,8 @@ v1.40 (2017/10/2)	- Moved JEBUS into its own folder. Reorganised code.
 					- Multi vehicle groups support RESPAWNMARKERS
 					- Various tweaks and fixes
 v1.41 (2017/12/29)	- Stopped units moving to default spawn position when using RESPAWNMARKERS
+v1.42 (2018/5/6)	- The behemeth update
+					- Backpacks in vehicle cargo saved
+					- Vehicle fuel and hitpoints saved
+					- Vehicle skin, camonets, slat armour, etc. saved
+					- Group synchronizations are saved
