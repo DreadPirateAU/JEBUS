@@ -11,6 +11,10 @@ class jebus
 		class cache {};
 		class saveWaypoints {};
 		class applyWaypoints {};
+		class saveUnit {};
+		class spawnUnits {};
+		class saveVehicle {};
+		class spawnVehicles {};
 	};
 
 };
