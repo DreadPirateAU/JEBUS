@@ -3,56 +3,36 @@
  
 if (!isServer) exitWith {};
  
-waituntil {!isnil "bis_fnc_init"};
+waituntil {time > 1};
  
 private [
     "_unit"
     ,"_cacheRadius"
-    ,"_crewList"
-    ,"_crewInventoryList"
-    ,"_crewSkillList"
+	,"_crewData"
     ,"_debug"
     ,"_exitTrigger"
     ,"_firstLoop"
     ,"_gaiaParameter"
     ,"_gaiaZone"
-    ,"_infantryList"
-    ,"_infantryInventoryList"
-    ,"_infantrySkillList"
+	,"_infantryData"
     ,"_initString"
     ,"_initialDelay"
     ,"_lives"
     ,"_newGroup"
-    ,"_newVehicle"
     ,"_pauseRadius"
     ,"_reduceRadius"
     ,"_respawnDelay"
     ,"_respawnDir"
     ,"_respawnMarkers"
-    ,"_respawnPos"
+    ,"_defaultRespawnPos"
     ,"_special"
-    ,"_tmpGroup"
     ,"_tmpRespawnPos"
     ,"_tmpZone"
     ,"_trigger"
     ,"_unitGroup"
     ,"_unitSide"
     ,"_unitsInGroup"
-    ,"_vehicleHitpointsDamageList"
-    ,"_vehicleHealthList"
-    ,"_vehicleFuelList"
-    ,"_vehicleList"
-    ,"_vehiclePositionList"
-    ,"_vehicleItemList"
-    ,"_vehicleLockedList"
-    ,"_vehicleMagazineList"
-    ,"_vehiclePylonList"
-    ,"_vehicleWeaponList"
-    ,"_vehicleBackpackList"
-    ,"_vehicleMaterialsList"
-    ,"_vehicleTexturesList"
-    ,"_vehicleAnimationNames"
-    ,"_vehicleAnimationPhases"
+	,"_vehicleData"
     ,"_waypointList"
     ,"_synchronizedObjectsList"
 ];
@@ -62,7 +42,7 @@ _unit = _this select 0;
 // Make sure unit is a unit and not a group (Thanks to S.Crowe)
 if (typeName _unit == "GROUP") then { _unit = leader _unit; };
  
-_respawnPos = getPos _unit;
+_defaultRespawnPos = getPos _unit;
 _respawnDir = getDir _unit;
 _unitSide = side _unit;
  
@@ -71,29 +51,11 @@ _unitsInGroup = units _unitGroup;
  
 _waypointList = [];
 _synchronizedObjectsList = [];
-_infantryList = [];
-_infantryInventoryList = [];
-_infantrySkillList = [];
-_vehicleList = [];
-_vehicleHitpointsDamageList = [];
-_vehicleHealthList = [];
-_vehicleFuelList = [];
-_vehiclePositionList = [];
-_vehicleLockedList = [];
-_vehicleItemList = [];
-_vehicleMagazineList = [];
-_vehiclePylonList = [];
-_vehicleWeaponList = [];
-_vehicleBackpackList = [];
-_vehicleMaterialsList = [];
-_vehicleTexturesList = [];
-_vehicleAnimationNames = [];
-_vehicleAnimationPhases = [];
-_crewList = [];
-_crewInventoryList = [];
-_crewSkillList = [];
+_infantryData = [];
+_vehicleData = [];
+_crewData = [];
 _respawnPosList = [];
-_respawnPosList pushBack _respawnPos;
+_respawnPosList pushBack _defaultRespawnPos;
  
 //Set up default parameters
 _lives = -1;
@@ -141,8 +103,9 @@ if (typeName _lives == "ARRAY") then {
     _lives = _minLives + floor random (_maxLives - _minLives);
 };
  
+//Check for synchronized trigger
+
 _syncs = synchronizedObjects _unit;
- 
 {
     if (typeOf _x == "EmptyDetector") then
     {
@@ -151,17 +114,9 @@ _syncs = synchronizedObjects _unit;
     }
     else
     {
-        _synchronizedObjectsList append [_x];
+        _synchronizedObjectsList pushBack (_x);
     };
 } forEach _syncs;
- 
-//Check for synchronized trigger
-/*
-if (count (synchronizedObjects _unit) > 0) then {
-    _trigger = (synchronizedObjects _unit) select 0;
-    if (_debug) then {systemChat "Synchronized trigger activation present"};
-};
-*/
  
 //Freeze units
 {
@@ -174,54 +129,9 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
 //Save unit data and delete
 {
     if ( (vehicle _x) isKindOf "LandVehicle" || (vehicle _x) isKindOf "Air" || (vehicle _x) isKindOf "Ship") then {
-        _vehicleList append [typeOf (vehicle _x)];
-        _vehicleHitpointsDamageList append [getAllHitpointsDamage (vehicle _x)];
-        _vehicleHealthList append [damage (vehicle _x)];
-        _vehicleFuelList append [fuel (vehicle _x)];
-        _vehiclePositionList append [getPos (vehicle _x)];
-        _vehicleLockedList append [locked (vehicle _x)];
-        _vehicleItemList append [itemCargo (vehicle _x)];
-        _vehicleMagazineList append [magazineCargo (vehicle _x)];
-        _vehicleWeaponList append [weaponCargo (vehicle _x)];
-        _vehicleBackpackList append [backpackCargo (vehicle _x)];
-        _vehicleMaterialsList append [getObjectMaterials (vehicle _x)];
-        _vehicleTexturesList append [getObjectTextures (vehicle _x)];
-        _vehiclePylonList append [getPylonMagazines (vehicle _x)];
-       
-        _thisVehicle = (vehicle _x);
-        _thisAnimationNames = animationNames (vehicle _x);
-        _thisAnimationPhases = [];
-        {
-            _thisAnimationPhases append [_thisVehicle animationPhase _x];
-        } forEach _thisAnimationNames;
-        _vehicleAnimationNames append [_thisAnimationNames];
-        _vehicleAnimationPhases append [_thisAnimationPhases];
-       
-       
-        _tmpCrew = crew (vehicle _x);
-        sleep 0.1;
-        deleteVehicle (vehicle _x);
-        sleep 0.1;
-        _tmpCrewList = [];
-        _tmpCrewInventoryList = [];
-        _tmpCrewSkillList = [];
-        {
-            _tmpCrewList append [typeOf (vehicle _x)];
-            _tmpCrewInventoryList append [getUnitLoadout _x];
-            _tmpCrewSkillList append [skill _x];
-            deleteVehicle _x;
-            sleep 0.1
-        } forEach _tmpCrew;
- 
-        _crewList set [(count _vehicleList - 1), _tmpCrewList];
-        _crewInventoryList set [(count _vehicleList - 1), _tmpCrewInventoryList];
-        _crewSkillList set [(count _vehicleList - 1), _tmpCrewSkillList];
+		_vehicleData pushBack ([_x] call jebus_fnc_saveVehicle);
     } else {
-         _infantryList append [typeOf (vehicle _x)];
-         _infantryInventoryList append [getUnitLoadout _x];
-         _infantrySkillList append [skill _x];
-        deleteVehicle (vehicle _x);
-        sleep 0.1;
+		_infantryData pushBack ([_x] call jebus_fnc_saveUnit);
     };
    
     sleep 0.1;
@@ -230,7 +140,7 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
  
 deleteGroup _unitGroup;
 sleep 1;
- 
+
 _firstLoop = true;
  
 //Main loop
@@ -262,115 +172,11 @@ while { _lives != 0 } do {
     };
  
     //Spawn vehicles - spawn, disable sim, add crew, enable sim......
-    for "_vehicleIndex" from 0 to (count _vehicleList - 1) do {
-        private "_newVehiclePosition";
-       
-        _newVehicleType = (_vehicleList select _vehicleIndex);
-        if (_tmpRespawnPos isEqualTo _respawnPos) then {
-            _newVehiclePosition = (_vehiclePositionList select _vehicleIndex);
-        } else {
-            if (_vehicleIndex == 0) then {
-                _newVehiclePosition = _tmpRespawnPos;
-            } else {
-                _newVehiclePosition = _tmpRespawnPos findEmptyPosition [5, 50, _newVehicleType];
-            };
-        };
-        _newVehicle = createVehicle [_newVehicleType, _newVehiclePosition, [], 0, _special];
-        _newGroup setFormDir _respawnDir;
-        _newVehicle setDir _respawnDir;
-        _newGroup addVehicle _newVehicle;
-        _newVehicle enableSimulationGlobal false;
-        _newVehicle lock (_vehicleLockedList select _vehicleIndex);
-        _newVehicle setDamage (_vehicleHealthList select _vehicleIndex);
-        _newVehicle setFuel (_vehicleFuelList select _vehicleIndex);
-        _hitpoint = (_vehicleHitpointsDamageList select _vehicleIndex) select 0;
-        _hitpointDamage = (_vehicleHitpointsDamageList select _vehicleIndex) select 2;
-        {
-            _newVehicle setHitPointDamage [_x, _hitpointDamage select _forEachIndex];
-        } forEach _hitpoint;
-        //hint format["%1", _hitpoint];
-        clearItemCargoGlobal _newVehicle;
-        clearMagazineCargoGlobal _newVehicle;
-        clearWeaponCargoGlobal _newVehicle;
-        clearBackpackCargoGlobal _newVehicle;
-        {
-            _newVehicle addItemCargoGlobal [_x,1];
-        } forEach (_vehicleItemList select _vehicleIndex);
-        {
-            _newVehicle addMagazineCargoGlobal [_x,1];
-        } forEach (_vehicleMagazineList select _vehicleIndex);
-        {
-            _newVehicle addWeaponCargoGlobal [_x,1];
-        } forEach (_vehicleWeaponList select _vehicleIndex);
-        {
-            _newVehicle addBackpackCargoGlobal [_x,1];
-        } forEach (_vehicleBackpackList select _vehicleIndex);
-        {
-            _newVehicle setPylonLoadOut [(_forEachIndex + 1), _x];
-        } forEach (_vehiclePylonList select _vehicleIndex);
-        {
-            _newVehicle setObjectMaterialGlobal [_forEachIndex, _x];
-        } forEach (_vehicleMaterialsList select _vehicleIndex);
-        {
-            _newVehicle setObjectTextureGlobal [_forEachIndex, _x];
-        } forEach (_vehicleTexturesList select _vehicleIndex);
-       
-        _thisAnimationNames = _vehicleAnimationNames select _vehicleIndex;
-        _thisAnimationPhases = _vehicleAnimationPhases select _vehicleIndex;
-        {
-            _newVehicle animateSource [_x, _thisAnimationPhases select _forEachIndex];
-        } forEach _thisAnimationNames;
-       
-        sleep 0.1;
- 
-        _tmpGroup = [_tmpRespawnPos, _unitSide, (_crewList select _vehicleIndex)] call BIS_fnc_spawnGroup;
-        {
-            _tmpInventory = _crewInventoryList select _vehicleIndex;
-            _x setUnitLoadout (_tmpInventory select _forEachIndex);
-            _tmpSkill = _crewSkillList select _vehicleIndex;
-            _x setSkill (_tmpSkill select _forEachIndex);
-            sleep 0.1;
-            _x moveInAny _newVehicle;
-        } forEach (units _tmpGroup);
- 
-        waituntil {
-            sleep 1;
-            count crew _newVehicle == count (units _tmpGroup)
-        };
- 
-        if (_newVehicle isKindOf "Plane" && _special == "FLY") then {
-            _newVehicle setVelocity [
-                60 * sin _respawnDir,
-                60 * cos _respawnDir,
-                0
-            ];
-        };
-       
-        _newVehicle enableSimulationGlobal true;
-       
-        sleep 0.1;
-       
-        (units _tmpGroup) joinSilent _newGroup;
- 
-        {_x addCuratorEditableObjects [[_newVehicle],true]} forEach allCurators;
-        sleep 0.1;
-    };
- 
+	[_vehicleData, _newGroup,_tmpRespawnPos, _defaultRespawnPos, _respawnDir, _special] call jebus_fnc_spawnVehicles;
+	
     //Spawn infantry
-    _tmpGroup = [_tmpRespawnPos, _unitSide, _infantryList] call BIS_fnc_spawnGroup;
-    sleep 0.1;
-    {
-        _x setUnitLoadout (_infantryInventoryList select _forEachIndex);
-        _x setSkill (_infantrySkillList select _forEachIndex);
-        sleep 0.1;
-    } forEach (units _tmpGroup);
+	[_infantryData, _newGroup, _tmpRespawnPos] call jebus_fnc_spawnUnits;
    
-    (units _tmpGroup) joinSilent _newGroup;
-   
-    sleep 0.1;
-   
-    {_x addCuratorEditableObjects [units _newGroup,false]} forEach allCurators;
- 
     //Initiate caching
     if ("CACHE=" in _this) then {
         [_newGroup, _cacheRadius, _debug] spawn jebus_fnc_cache;
@@ -408,7 +214,6 @@ while { _lives != 0 } do {
     {
         _proxyThis synchronizeObjectsAdd [_x];
     } forEach _synchronizedObjectsList;
- 
    
     call compile format [_initString];
    
