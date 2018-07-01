@@ -11,6 +11,7 @@ private [
     ,"_crewList"
     ,"_crewInventoryList"
     ,"_crewSkillList"
+	,"_crewVarNameList"
     ,"_debug"
     ,"_exitTrigger"
     ,"_firstLoop"
@@ -19,6 +20,7 @@ private [
     ,"_infantryList"
     ,"_infantryInventoryList"
     ,"_infantrySkillList"
+	,"_infantryVarNameList"
     ,"_initString"
     ,"_initialDelay"
     ,"_lives"
@@ -53,6 +55,7 @@ private [
     ,"_vehicleTexturesList"
     ,"_vehicleAnimationNames"
     ,"_vehicleAnimationPhases"
+	,"_vehicleVarNameList"
     ,"_waypointList"
     ,"_synchronizedObjectsList"
 ];
@@ -74,6 +77,7 @@ _synchronizedObjectsList = [];
 _infantryList = [];
 _infantryInventoryList = [];
 _infantrySkillList = [];
+_infantryVarNameList = [];
 _vehicleList = [];
 _vehicleHitpointsDamageList = [];
 _vehicleHealthList = [];
@@ -89,9 +93,11 @@ _vehicleMaterialsList = [];
 _vehicleTexturesList = [];
 _vehicleAnimationNames = [];
 _vehicleAnimationPhases = [];
+_vehicleVarNameList = [];
 _crewList = [];
 _crewInventoryList = [];
 _crewSkillList = [];
+_crewVarNameList = [];
 _respawnPosList = [];
 _respawnPosList pushBack _respawnPos;
  
@@ -174,41 +180,43 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
 //Save unit data and delete
 {
     if ( (vehicle _x) isKindOf "LandVehicle" || (vehicle _x) isKindOf "Air" || (vehicle _x) isKindOf "Ship") then {
-        _vehicleList append [typeOf (vehicle _x)];
-        _vehicleHitpointsDamageList append [getAllHitpointsDamage (vehicle _x)];
-        _vehicleHealthList append [damage (vehicle _x)];
-        _vehicleFuelList append [fuel (vehicle _x)];
-        _vehiclePositionList append [getPos (vehicle _x)];
-        _vehicleLockedList append [locked (vehicle _x)];
-        _vehicleItemList append [itemCargo (vehicle _x)];
-        _vehicleMagazineList append [magazineCargo (vehicle _x)];
-        _vehicleWeaponList append [weaponCargo (vehicle _x)];
-        _vehicleBackpackList append [backpackCargo (vehicle _x)];
-        _vehicleMaterialsList append [getObjectMaterials (vehicle _x)];
-        _vehicleTexturesList append [getObjectTextures (vehicle _x)];
-        _vehiclePylonList append [getPylonMagazines (vehicle _x)];
+		_currentVehicle = vehicle _x;
+        _vehicleList append [typeOf _currentVehicle];
+        _vehicleHitpointsDamageList append [getAllHitpointsDamage _currentVehicle];
+        _vehicleHealthList append [damage _currentVehicle];
+        _vehicleFuelList append [fuel _currentVehicle];
+        _vehiclePositionList append [getPos _currentVehicle];
+        _vehicleLockedList append [locked _currentVehicle];
+        _vehicleItemList append [itemCargo _currentVehicle];
+        _vehicleMagazineList append [magazineCargo _currentVehicle];
+        _vehicleWeaponList append [weaponCargo _currentVehicle];
+        _vehicleBackpackList append [backpackCargo _currentVehicle];
+        _vehicleMaterialsList append [getObjectMaterials _currentVehicle];
+        _vehicleTexturesList append [getObjectTextures _currentVehicle];
+        _vehiclePylonList append [getPylonMagazines _currentVehicle];
        
-        _thisVehicle = (vehicle _x);
-        _thisAnimationNames = animationNames (vehicle _x);
+        _thisAnimationNames = animationNames _currentVehicle;
         _thisAnimationPhases = [];
         {
-            _thisAnimationPhases append [_thisVehicle animationPhase _x];
+            _thisAnimationPhases append [_currentVehicle animationPhase _x];
         } forEach _thisAnimationNames;
         _vehicleAnimationNames append [_thisAnimationNames];
         _vehicleAnimationPhases append [_thisAnimationPhases];
+		_vehicleVarNameList append [vehicleVarName _currentVehicle];
        
-       
-        _tmpCrew = crew (vehicle _x);
+        _tmpCrew = crew _currentVehicle;
         sleep 0.1;
-        deleteVehicle (vehicle _x);
+        deleteVehicle _currentVehicle;
         sleep 0.1;
         _tmpCrewList = [];
         _tmpCrewInventoryList = [];
         _tmpCrewSkillList = [];
+		_tmpCrewVarNameList = [];
         {
             _tmpCrewList append [typeOf (vehicle _x)];
             _tmpCrewInventoryList append [getUnitLoadout _x];
             _tmpCrewSkillList append [skill _x];
+			_tmpCrewVarNameList append [vehicleVarName _x];
             deleteVehicle _x;
             sleep 0.1
         } forEach _tmpCrew;
@@ -216,10 +224,12 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
         _crewList set [(count _vehicleList - 1), _tmpCrewList];
         _crewInventoryList set [(count _vehicleList - 1), _tmpCrewInventoryList];
         _crewSkillList set [(count _vehicleList - 1), _tmpCrewSkillList];
+		_crewVarNameList set [(count _vehicleList - 1), _tmpCrewVarNameList];
     } else {
          _infantryList append [typeOf (vehicle _x)];
          _infantryInventoryList append [getUnitLoadout _x];
          _infantrySkillList append [skill _x];
+		 _infantryVarNameList append [vehicleVarName _x];
         deleteVehicle (vehicle _x);
         sleep 0.1;
     };
@@ -320,6 +330,7 @@ while { _lives != 0 } do {
         {
             _newVehicle animateSource [_x, _thisAnimationPhases select _forEachIndex];
         } forEach _thisAnimationNames;
+		_newVehicle setVehicleVarName (_vehicleVarNameList select _vehicleIndex);
        
         sleep 0.1;
  
@@ -329,6 +340,8 @@ while { _lives != 0 } do {
             _x setUnitLoadout (_tmpInventory select _forEachIndex);
             _tmpSkill = _crewSkillList select _vehicleIndex;
             _x setSkill (_tmpSkill select _forEachIndex);
+			_tmpVarName = _crewVarNameList select _vehicleIndex;
+			_x setVehicleVarName (_tmpVarName select _forEachIndex);
             sleep 0.1;
             _x moveInAny _newVehicle;
         } forEach (units _tmpGroup);
@@ -362,6 +375,7 @@ while { _lives != 0 } do {
     {
         _x setUnitLoadout (_infantryInventoryList select _forEachIndex);
         _x setSkill (_infantrySkillList select _forEachIndex);
+		_x setVehicleVarName (_infantryVarNameList select _forEachIndex);
         sleep 0.1;
     } forEach (units _tmpGroup);
    
