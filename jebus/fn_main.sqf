@@ -3,8 +3,6 @@
  
 if (!isServer) exitWith {};
  
-waituntil {!isnil "bis_fnc_init"};
- 
 private [
     "_unit"
     ,"_cacheRadius"
@@ -150,7 +148,7 @@ if (typeName _lives == "ARRAY") then {
 _syncs = synchronizedObjects _unit;
  
 {
-    if (typeOf _x == "EmptyDetector") then
+    if (_x isKindOf "EmptyDetector") then
     {
         _trigger = _x;
         if (_debug) then {systemChat "Synchronized trigger activation present"};
@@ -160,9 +158,9 @@ _syncs = synchronizedObjects _unit;
         _synchronizedObjectsList append [_x];
     };
 } forEach _syncs;
- 
+
+/* 
 //Check for synchronized trigger
-/*
 if (count (synchronizedObjects _unit) > 0) then {
     _trigger = (synchronizedObjects _unit) select 0;
     if (_debug) then {systemChat "Synchronized trigger activation present"};
