@@ -103,7 +103,7 @@ _respawnPosList pushBack _respawnPos;
 _lives = -1;
 _cacheRadius = 0;
 _reduceRadius = 0;
-_pauseRadius = 200;
+_pauseRadius = 0;
 _respawnDelay = 30;
 _initialDelay = 0;
 _gaiaParameter = "";
@@ -158,14 +158,6 @@ _syncs = synchronizedObjects _unit;
         _synchronizedObjectsList append [_x];
     };
 } forEach _syncs;
-
-/* 
-//Check for synchronized trigger
-if (count (synchronizedObjects _unit) > 0) then {
-    _trigger = (synchronizedObjects _unit) select 0;
-    if (_debug) then {systemChat "Synchronized trigger activation present"};
-};
-*/
  
 //Freeze units
 {
@@ -296,7 +288,6 @@ while { _lives != 0 } do {
         {
             _newVehicle setHitPointDamage [_x, _hitpointDamage select _forEachIndex];
         } forEach _hitpoint;
-        //hint format["%1", _hitpoint];
         clearItemCargoGlobal _newVehicle;
         clearMagazineCargoGlobal _newVehicle;
         clearWeaponCargoGlobal _newVehicle;
@@ -328,7 +319,11 @@ while { _lives != 0 } do {
         {
             _newVehicle animateSource [_x, _thisAnimationPhases select _forEachIndex];
         } forEach _thisAnimationNames;
-		_newVehicle setVehicleVarName (_vehicleVarNameList select _vehicleIndex);
+		_newVehicleVarName = (_vehicleVarNameList select _vehicleIndex);
+		if (!(_newVehicleVarName isEqualTo "")) then {
+			_newVehicle setVehicleVarName _newVehicleVarName;
+			missionNamespace setVariable [_newVehicleVarName, _newVehicle, true];
+		};
        
         sleep 0.1;
  
@@ -338,8 +333,11 @@ while { _lives != 0 } do {
             _x setUnitLoadout (_tmpInventory select _forEachIndex);
             _tmpSkill = _crewSkillList select _vehicleIndex;
             _x setSkill (_tmpSkill select _forEachIndex);
-			_tmpVarName = _crewVarNameList select _vehicleIndex;
-			_x setVehicleVarName (_tmpVarName select _forEachIndex);
+			_tmpVarName = (_crewVarNameList select _vehicleIndex) select _forEachIndex;
+			if (!(_tmpVarName isEqualTo "")) then {
+				_x setVehicleVarName _tmpVarName;
+				missionNamespace setVariable [_tmpVarName, _x, true];
+			};
             sleep 0.1;
             _x moveInAny _newVehicle;
         } forEach (units _tmpGroup);
@@ -373,7 +371,11 @@ while { _lives != 0 } do {
     {
         _x setUnitLoadout (_infantryInventoryList select _forEachIndex);
         _x setSkill (_infantrySkillList select _forEachIndex);
-		_x setVehicleVarName (_infantryVarNameList select _forEachIndex);
+		_tmpVarName = (_infantryVarNameList select _forEachIndex);
+		if (!(_tmpVarName isEqualTo "")) then {
+			_x setVehicleVarName _tmpVarName;
+			missionNamespace setVariable [_tmpVarName, _x, true];
+		};
         sleep 0.1;
     } forEach (units _tmpGroup);
    
