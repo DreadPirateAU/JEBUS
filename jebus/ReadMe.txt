@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.431
-Release Date: 2018/7/6
+Version: 1.432
+Release Date: 2019/5/11
 Author: DreadPirate
 
 Short Description:
@@ -143,3 +143,5 @@ v1.42 (2018/5/6)	- The behemeth update
 v1.43 (2018/7/1)	- Variable names are saved for all group members and vehicles
 					- Various tweaks and fixes
 v1.431 (2018/7/6)	- Fixed a bug with trigger activation
+v1.432 (2019/5/11)	- Variable names are now *actually* saved for all group members and vehicles
+					- Pause radius default is now 0
