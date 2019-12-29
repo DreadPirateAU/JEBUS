@@ -195,9 +195,9 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
 		_vehicleVarNameList append [vehicleVarName _currentVehicle];
        
         _tmpCrew = crew _currentVehicle;
-        sleep 0.1;
+        sleep 0.2;
         deleteVehicle _currentVehicle;
-        sleep 0.1;
+        sleep 0.2;
         _tmpCrewList = [];
         _tmpCrewInventoryList = [];
         _tmpCrewSkillList = [];
@@ -208,7 +208,7 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
             _tmpCrewSkillList append [skill _x];
 			_tmpCrewVarNameList append [vehicleVarName _x];
             deleteVehicle _x;
-            sleep 0.1
+            sleep 0.2
         } forEach _tmpCrew;
  
         _crewList set [(count _vehicleList - 1), _tmpCrewList];
@@ -221,10 +221,10 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
          _infantrySkillList append [skill _x];
 		 _infantryVarNameList append [vehicleVarName _x];
         deleteVehicle (vehicle _x);
-        sleep 0.1;
+        sleep 0.2;
     };
    
-    sleep 0.1;
+    sleep 0.2;
    
 } forEach _unitsInGroup;
  
@@ -331,7 +331,7 @@ while { _lives != 0 } do {
 			missionNamespace setVariable [_newVehicleVarName, _newVehicle, true];
 		};
        
-        sleep 0.1;
+        sleep 0.2;
  
         _tmpGroup = [_tmpRespawnPos, _unitSide, (_crewList select _vehicleIndex)] call BIS_fnc_spawnGroup;
         {
@@ -344,7 +344,7 @@ while { _lives != 0 } do {
 				[_x, _tmpVarName] remoteExec ["setVehicleVarName", 0, _x];
 				missionNamespace setVariable [_tmpVarName, _x, true];
 			};
-            sleep 0.1;
+            sleep 0.2;
             _x moveInAny _newVehicle;
         } forEach (units _tmpGroup);
  
@@ -363,7 +363,7 @@ while { _lives != 0 } do {
        
         _newVehicle enableSimulationGlobal true;
        
-        sleep 0.1;
+        sleep 0.2;
        
         (units _tmpGroup) joinSilent _newGroup;
  
@@ -376,7 +376,7 @@ while { _lives != 0 } do {
  
     //Spawn infantry
     _tmpGroup = [_tmpRespawnPos, _unitSide, _infantryList] call BIS_fnc_spawnGroup;
-    sleep 0.1;
+    sleep 0.2;
     {
         _x setUnitLoadout (_infantryInventoryList select _forEachIndex);
         _x setSkill (_infantrySkillList select _forEachIndex);
@@ -385,12 +385,12 @@ while { _lives != 0 } do {
 			[_x, _tmpVarName] remoteExec ["setVehicleVarName", 0, _x];
 			missionNamespace setVariable [_tmpVarName, _x, true];
 		};
-        sleep 0.1;
+        sleep 0.2;
     } forEach (units _tmpGroup);
    
     (units _tmpGroup) joinSilent _newGroup;
    
-    sleep 0.1;
+    sleep 0.2;
    
     {_x addCuratorEditableObjects [units _newGroup,false]} forEach allCurators;
  
