@@ -5,14 +5,18 @@
 
 _aircraft = vehicle (_this select 0);
 
+_debug = false;
+
 if ("DEBUG" in _this) then { _debug = true;	};
 
 _crew = crew _aircraft;
 
-if (_debug) then { systemChat "Jebus Pilot Kill is active";	};
+_group = group (_crew select 0);
+
+if (_debug) then { systemChat format["%1 - Jebus Pilot Kill", _group] };
 
 waitUntil {!canMove _aircraft};
 
-if (_debug) then { systemChat "Killing crew"; };	
+if (_debug) then { systemChat format["%1 - Killing crew", _group] };	
 
 {deleteVehicle _x} foreach _crew;

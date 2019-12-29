@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.432
-Release Date: 2019/6/1
+Version: 1.433
+Release Date: 2019/12/29
 Author: DreadPirate
 
 Short Description:
@@ -53,7 +53,7 @@ this					= Leader of a group
 "GAIA_FORTIFY="			= Group added to GAIA with "FORTIFY" parameter
 "FLYING"				= Air vehicles will spawn already flying
 "RESPAWNMARKERS="		= Array of alternate respawn positions
-"PAUSE="				= Radius in which enemies will pause the spawner. Default is 200.
+"PAUSE="				= Radius in which enemies will pause the spawner. Default is 0.
 "EXIT="					= Name of exit trigger
 						  Group will not respawn again once trigger is activated
 "INIT="					= Init string to run upon spawning
@@ -145,3 +145,5 @@ v1.43 (2018/7/1)	- Variable names are saved for all group members and vehicles
 v1.431 (2018/7/6)	- Fixed a bug with trigger activation
 v1.432 (2019/6/1)	- Variable names are now *actually* saved for all group members and vehicles
 					- Pause radius default is now 0
+v1.433 (2019/12/29)	- Vehicles spawn 2m off ground (Global Mobilization fix)
+					- Various tweaks and fixes

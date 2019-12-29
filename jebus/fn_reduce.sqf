@@ -7,7 +7,7 @@ params [
 	,"_debug"
 ];
 
-if (_debug) then { systemChat "Jebus Reduce is active"; };
+if (_debug) then { systemChat format["%1 - Using Reduce", _group] };
 
 _group setVariable ["IsReduced", false];
 
@@ -23,7 +23,7 @@ while {{alive _x} count (units _group) > 0} do {
 			
 	if ([getPos (leader _group), _radius] call jebus_fnc_playerInRadius) then {
 		if (_group getVariable "IsReduced") then {
-			if (_debug) then { systemChat "Jebus Reduce. Rebuilding group."; };
+			if (_debug) then { systemChat format["%1 - Rebuilding Group", _group] };
 							
 			{
 				(vehicle _x) hideObjectGlobal false;
@@ -36,7 +36,7 @@ while {{alive _x} count (units _group) > 0} do {
 		};
 	} else {
 		if (!(_group getVariable "IsReduced")) then {
-			if (_debug) then { systemChat "Jebus Reduce. Reducing group."; };
+			if (_debug) then { systemChat format["%1 - Reducing Group", _group] };
 			
 			{
 				(vehicle _x) hideObjectGlobal true;

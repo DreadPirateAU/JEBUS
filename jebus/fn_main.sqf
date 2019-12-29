@@ -161,7 +161,7 @@ _syncs = synchronizedObjects _unit;
  
 //Freeze units
 {
-    _x enableSimulationGlobal false;
+    (vehicle _x) enableSimulationGlobal false;
 } forEach _unitsInGroup;
  
 //Save waypoint data
@@ -175,7 +175,7 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
         _vehicleHitpointsDamageList append [getAllHitpointsDamage _currentVehicle];
         _vehicleHealthList append [damage _currentVehicle];
         _vehicleFuelList append [fuel _currentVehicle];
-        _vehiclePositionList append [getPos _currentVehicle];
+		_vehiclePositionList append [getPos _currentVehicle];
         _vehicleLockedList append [locked _currentVehicle];
         _vehicleItemList append [itemCargo _currentVehicle];
         _vehicleMagazineList append [magazineCargo _currentVehicle];
@@ -195,9 +195,9 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
 		_vehicleVarNameList append [vehicleVarName _currentVehicle];
        
         _tmpCrew = crew _currentVehicle;
-        sleep 0.1;
+        sleep 0.2;
         deleteVehicle _currentVehicle;
-        sleep 0.1;
+        sleep 0.2;
         _tmpCrewList = [];
         _tmpCrewInventoryList = [];
         _tmpCrewSkillList = [];
@@ -208,7 +208,7 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
             _tmpCrewSkillList append [skill _x];
 			_tmpCrewVarNameList append [vehicleVarName _x];
             deleteVehicle _x;
-            sleep 0.1
+            sleep 0.2
         } forEach _tmpCrew;
  
         _crewList set [(count _vehicleList - 1), _tmpCrewList];
@@ -221,10 +221,10 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
          _infantrySkillList append [skill _x];
 		 _infantryVarNameList append [vehicleVarName _x];
         deleteVehicle (vehicle _x);
-        sleep 0.1;
+        sleep 0.2;
     };
    
-    sleep 0.1;
+    sleep 0.2;
    
 } forEach _unitsInGroup;
  
@@ -235,12 +235,15 @@ _firstLoop = true;
  
 //Main loop
 while { _lives != 0 } do {
+	sleep 1;
+	
     //Wait for trigger activation (Thanks to pritchardgsd)
     if (! isNil "_trigger") then {
-        while {! (triggerActivated _trigger)} do {
-            sleep 10;
-            if (_debug) then {systemChat "Waiting for trigger activation"};
-        };
+		waituntil {
+			if (_debug && (floor ((time % 10)) == 0)) then {systemChat "Waiting for trigger activation"};
+			sleep 1;
+			(triggerActivated _trigger);
+		};
     };
    
     if (_firstLoop && _initialDelay > 0) then {
@@ -248,16 +251,16 @@ while { _lives != 0 } do {
         _firstLoop = false;
         if (_debug) then {systemChat "First Loop!"};
     };
-   
-    if (_debug) then {systemChat "Spawning group."};
- 
+    
     _newGroup = createGroup _unitSide;
     _newGroup setVariable ["groupInitialising", true, false];
- 
+
+    if (_debug) then {systemChat format["Spawning group: %1", _newGroup]};
+
     _tmpRespawnPos = selectRandom _respawnPosList;
  
     while {[_tmpRespawnPos, _unitSide, _pauseRadius] call jebus_fnc_enemyInRadius} do {
-        if (_debug) then {systemChat "Enemies in pause radius. Waiting."};
+        if (_debug) then {systemChat format["%1 - Enemies in pause radius", _newGroup]};
         sleep 5;
     };
  
@@ -272,10 +275,13 @@ while { _lives != 0 } do {
             if (_vehicleIndex == 0) then {
                 _newVehiclePosition = _tmpRespawnPos;
             } else {
-                _newVehiclePosition = _tmpRespawnPos findEmptyPosition [5, 50, _newVehicleType];
+				_relativePos = (_vehiclePositionList select _vehicleIndex) vectorDiff (_vehiclePositionList select 0);
+				_newVehiclePosition = _tmpRespawnPos vectorAdd _relativePos;
             };
         };
+		_newVehiclePosition = [_newVehiclePosition select 0, _newVehiclePosition select 1, (_newVehiclePosition select 2)+ 2];
         _newVehicle = createVehicle [_newVehicleType, _newVehiclePosition, [], 0, _special];
+		_newVehicle allowDamage false;
         _newGroup setFormDir _respawnDir;
         _newVehicle setDir _respawnDir;
         _newGroup addVehicle _newVehicle;
@@ -325,7 +331,7 @@ while { _lives != 0 } do {
 			missionNamespace setVariable [_newVehicleVarName, _newVehicle, true];
 		};
        
-        sleep 0.1;
+        sleep 0.2;
  
         _tmpGroup = [_tmpRespawnPos, _unitSide, (_crewList select _vehicleIndex)] call BIS_fnc_spawnGroup;
         {
@@ -338,7 +344,7 @@ while { _lives != 0 } do {
 				[_x, _tmpVarName] remoteExec ["setVehicleVarName", 0, _x];
 				missionNamespace setVariable [_tmpVarName, _x, true];
 			};
-            sleep 0.1;
+            sleep 0.2;
             _x moveInAny _newVehicle;
         } forEach (units _tmpGroup);
  
@@ -357,17 +363,20 @@ while { _lives != 0 } do {
        
         _newVehicle enableSimulationGlobal true;
        
-        sleep 0.1;
+        sleep 0.2;
        
         (units _tmpGroup) joinSilent _newGroup;
  
         {_x addCuratorEditableObjects [[_newVehicle],true]} forEach allCurators;
-        sleep 0.1;
+        sleep 1;
+		
+		_newVehicle allowDamage true;
+		
     };
  
     //Spawn infantry
     _tmpGroup = [_tmpRespawnPos, _unitSide, _infantryList] call BIS_fnc_spawnGroup;
-    sleep 0.1;
+    sleep 0.2;
     {
         _x setUnitLoadout (_infantryInventoryList select _forEachIndex);
         _x setSkill (_infantrySkillList select _forEachIndex);
@@ -376,12 +385,12 @@ while { _lives != 0 } do {
 			[_x, _tmpVarName] remoteExec ["setVehicleVarName", 0, _x];
 			missionNamespace setVariable [_tmpVarName, _x, true];
 		};
-        sleep 0.1;
+        sleep 0.2;
     } forEach (units _tmpGroup);
    
     (units _tmpGroup) joinSilent _newGroup;
    
-    sleep 0.1;
+    sleep 0.2;
    
     {_x addCuratorEditableObjects [units _newGroup,false]} forEach allCurators;
  
@@ -399,7 +408,7 @@ while { _lives != 0 } do {
    
     //Initiate GAIA
     if (_gaiaParameter in ["MOVE", "NOFOLLOW", "FORTIFY"]) then {
-        if (_debug) then {systemChat _gaiaParameter};
+        if (_debug) then {systemChat format["%1 : %2", _newGroup, _gaiaParameter]};
         switch (typeName _gaiaZone) do {
             case "ARRAY" : {
                 _tmpZone = selectRandom _gaiaZone;
@@ -416,15 +425,16 @@ while { _lives != 0 } do {
     [_newGroup, _waypointList, _debug] call jebus_fnc_applyWaypoints;
  
    
-    //Execute init string
+    //Add synchonizations and execute init string
     _proxyThis = leader _newgroup;
  
     {
         _proxyThis synchronizeObjectsAdd [_x];
     } forEach _synchronizedObjectsList;
- 
    
     call compile format [_initString];
+	
+	sleep 1;
    
     _newGroup setVariable ["groupInitialising", nil];
  
@@ -434,7 +444,7 @@ while { _lives != 0 } do {
         {alive _x} count (units _newGroup) < 1;
     };
  
-    if (_debug) then {systemChat "Group eliminated. Waiting for respawn."};
+    if (_debug) then {systemChat format ["%1 eliminated. Waiting for respawn.", _newGroup]};
  
     //Respawn delay
     if (typeName _respawnDelay == "ARRAY") then {
