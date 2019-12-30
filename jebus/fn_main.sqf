@@ -169,7 +169,7 @@ _waypointList = [_unitGroup] call jebus_fnc_saveWaypoints;
  
 //Save unit data and delete
 {
-    if ( (vehicle _x) isKindOf "LandVehicle" || (vehicle _x) isKindOf "Air" || (vehicle _x) isKindOf "Ship") then {
+    if ((vehicle _x) isKindOf "LandVehicle" || {(vehicle _x) isKindOf "Air" || {(vehicle _x) isKindOf "Ship"}}) then {
 		_currentVehicle = vehicle _x;
         _vehicleList append [typeOf _currentVehicle];
         _vehicleHitpointsDamageList append [getAllHitpointsDamage _currentVehicle];
@@ -240,13 +240,13 @@ while { _lives != 0 } do {
     //Wait for trigger activation (Thanks to pritchardgsd)
     if (! isNil "_trigger") then {
 		waituntil {
-			if (_debug && (floor ((time % 10)) == 0)) then {systemChat "Waiting for trigger activation"};
+			if (_debug && {floor ((time % 10)) == 0}) then {systemChat "Waiting for trigger activation"};
 			sleep 1;
 			(triggerActivated _trigger);
 		};
     };
    
-    if (_firstLoop && _initialDelay > 0) then {
+    if (_firstLoop && {_initialDelay > 0}) then {
         sleep _initialDelay;
         _firstLoop = false;
         if (_debug) then {systemChat "First Loop!"};
@@ -353,7 +353,7 @@ while { _lives != 0 } do {
             count crew _newVehicle == count (units _tmpGroup)
         };
  
-        if (_newVehicle isKindOf "Plane" && _special == "FLY") then {
+        if (_newVehicle isKindOf "Plane" && {_special == "FLY"}) then {
             _newVehicle setVelocity [
                 60 * sin _respawnDir,
                 60 * cos _respawnDir,
