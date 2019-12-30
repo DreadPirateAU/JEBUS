@@ -36,30 +36,30 @@ Installing to a sub-folder
 4. Proceed as normal
 
 Parameters:
-this					= Leader of a group
-"LIVES="				= Number of times group should respawn
-						  Integer or array [minLives, maxLives]. Default is infinite lives
-"DELAY="				= Delay in seconds before respawning
-						  Number or array [minTime, maxTime]
-						  Default is 30 seconds
-"CACHE="				= Group will cache until players are within "CACHE=" metres
-						  Default is no caching
-"REDUCE="				= Group will cache until players are within "REDUCE=" metres
-						  Default is no reducing
-"START="				= Initial spawning delay. Use if you spawn multiple groups by one trigger to avoid spawn
-						  lag. Default is 0.
+this				= Leader of a group
+"LIVES="			= Number of times group should respawn
+				  Integer or array [minLives, maxLives]. Default is infinite lives
+"DELAY="			= Delay in seconds before respawning
+				  Number or array [minTime, maxTime]
+				  Default is 30 seconds
+"CACHE="			= Group will cache until players are within "CACHE=" metres
+				  Default is no caching
+"REDUCE="			= Group will cache until players are within "REDUCE=" metres
+				  Default is no reducing
+"START="			= Initial spawning delay. Use if you spawn multiple groups by one trigger to avoid spawn
+				  lag. Default is 0.
 "GAIA_MOVE="			= Group added to GAIA with "MOVE" parameter
 "GAIA_NOFOLLOW="		= Group added to GAIA with "NOFOLLOW" parameter
 "GAIA_FORTIFY="			= Group added to GAIA with "FORTIFY" parameter
-"FLYING"				= Air vehicles will spawn already flying
+"FLYING"			= Air vehicles will spawn already flying
 "RESPAWNMARKERS="		= Array of alternate respawn positions
-"PAUSE="				= Radius in which enemies will pause the spawner. Default is 0.
-"EXIT="					= Name of exit trigger
-						  Group will not respawn again once trigger is activated
-"INIT="					= Init string to run upon spawning
-						  (Use "_proxyThis" where you would usually use "this" in a script or function call)
-						  Default is empty string.
-"DEBUG"					= Will provide debugging information
+"PAUSE="			= Radius in which enemies will pause the spawner. Default is 0.
+"EXIT="				= Name of exit trigger
+				  Group will not respawn again once trigger is activated
+"INIT="				= Init string to run upon spawning
+				  (Use "_proxyThis" where you would usually use "this" in a script or function call)
+				  Default is empty string.
+"DEBUG"				= Will provide debugging information
 
 Examples:
 
@@ -88,62 +88,62 @@ Group will respawn until myExitTrigger is activated.
 Changelog:
 v1.0 (2014/10/28) 	- First release
 v1.1 (2014/11/9) 	- Added support for Motorized, Mechanized & Armored groups
-					- Added trigger activated spawning
+			- Added trigger activated spawning
 v1.2 (2015/2/21)	- Added debugging information
-					- Added variable respawn delay
-					- Improved readability of installation and code
-					- Various tweaks
+			- Added variable respawn delay
+			- Improved readability of installation and code
+			- Various tweaks
 v1.3 (2015/3/17)	- ArmA 2 first release
-					- Made parameters more user friendly
-					- Added variable number of respawns
-					- Added simple patrol script
-					- Added simple attack script
-					- Added pilot kill script
+			- Made parameters more user friendly
+			- Added variable number of respawns
+			- Added simple patrol script
+			- Added simple attack script
+			- Added pilot kill script
 v1.31 (2015/3/30)	- Added reset when no enemies are within certain radius
-					- Added Arma 2 demo mission
+			- Added Arma 2 demo mission
 v1.32 (2015/5/8)	- Switched to using nearEntities instead of nearestObjects
-					- Changed activation and reset to detect players
+			- Changed activation and reset to detect players
 v1.33 (2016/3/27)	- Eden update
-					- Changed activation and reset to a caching system
-					- Simplified calling attack and patrol scripts
-					- Now handles units in vehicle cargo correctly
-					- Air vehicles can be spawned on ground or flying
-					- Diver and boat support
-					- Integrated GAIA support
-					- Added group clean up
-					- Discontinued ArmA 2 support
+			- Changed activation and reset to a caching system
+			- Simplified calling attack and patrol scripts
+			- Now handles units in vehicle cargo correctly
+			- Air vehicles can be spawned on ground or flying
+			- Diver and boat support
+			- Integrated GAIA support
+			- Added group clean up
+			- Discontinued ArmA 2 support
 v1.34 (2016/4/3)	- Added waypoint support
-					- Added variable respawn position support
-					- Added exit trigger support
-					- Removed simple attack and patrol scripts (use waypoints instead)
+			- Added variable respawn position support
+			- Added exit trigger support
+			- Removed simple attack and patrol scripts (use waypoints instead)
 v1.35 (2016/4/29)	- Fixed caching with hideObjectGlobal and enableSimulationGlobal
-					- Editor loadouts are saved and restored on respawn
+			- Editor loadouts are saved and restored on respawn
 v1.36 (2016/10/2)	- Script can be called from GROUP init (Thanks to S.Crowe)
-					- Locked status of vehicles saved and restored
-					- Cargo of vehicles saved and restored
+			- Locked status of vehicles saved and restored
+			- Cargo of vehicles saved and restored
 v1.37 (2017/1/1)	- Moved trigger activation inside main loop (Thanks to pritchardgsd)
-					- Switched to using getUnitLoadout over BIS_fnc_saveInventory
-					- Switched to using setUnitLoadout over BIS_fnc_loadInventory
-					- Fixed planes spawning with "FLYING"
+			- Switched to using getUnitLoadout over BIS_fnc_saveInventory
+			- Switched to using setUnitLoadout over BIS_fnc_loadInventory
+			- Fixed planes spawning with "FLYING"
 v1.38 (2017/2/26)	- Vehicles will respawn in editor positions
-					- "REDUCE=" added. Reduces a group to just the leader until players are within range (infantry only)
+			- "REDUCE=" added. Reduces a group to just the leader until players are within range (infantry only)
 v1.39 (2017/3/10)	- Skill levels are saved
-					- Various tweaks and fixes
+			- Various tweaks and fixes
 v1.40 (2017/10/2)	- Moved JEBUS into its own folder. Reorganised code.
-					- Dynamic Loadout support
-					- "START=" added. Initial spawning delay
-					- Multi vehicle groups support RESPAWNMARKERS
-					- Various tweaks and fixes
+			- Dynamic Loadout support
+			- "START=" added. Initial spawning delay
+			- Multi vehicle groups support RESPAWNMARKERS
+			- Various tweaks and fixes
 v1.41 (2017/12/29)	- Stopped units moving to default spawn position when using RESPAWNMARKERS
 v1.42 (2018/5/6)	- The behemeth update
-					- Backpacks in vehicle cargo saved
-					- Vehicle fuel and hitpoints saved
-					- Vehicle skin, camonets, slat armour, etc. saved
-					- Group synchronizations are saved
+			- Backpacks in vehicle cargo saved
+			- Vehicle fuel and hitpoints saved
+			- Vehicle skin, camonets, slat armour, etc. saved
+			- Group synchronizations are saved
 v1.43 (2018/7/1)	- Variable names are saved for all group members and vehicles
-					- Various tweaks and fixes
+			- Various tweaks and fixes
 v1.431 (2018/7/6)	- Fixed a bug with trigger activation
 v1.432 (2019/6/1)	- Variable names are now *actually* saved for all group members and vehicles
-					- Pause radius default is now 0
+			- Pause radius default is now 0
 v1.433 (2019/12/29)	- Vehicles spawn 2m off ground (Global Mobilization fix)
-					- Various tweaks and fixes
+			- Various tweaks and fixes
