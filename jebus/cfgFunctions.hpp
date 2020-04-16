@@ -21,7 +21,6 @@ class jebus
 		class applyWaypoints {};
 		class unstick {};
 		class dismiss {};
-		class new {};
 	};
 
 };
