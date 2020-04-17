@@ -1,5 +1,5 @@
 // 0 = [this, <other parameters>] spawn jebus_fnc_main;
-// 0 = [this, "LIVES=",1] spawn jebus_fnc_new;
+// 0 = [this, "LIVES=",1] spawn jebus_fnc_main;
 
 waitUntil { time > 0 };
 if (!isServer) exitWith {};
