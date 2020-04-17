@@ -20,7 +20,7 @@ class jebus
 		class saveWaypoints {};
 		class applyWaypoints {};
 		class unstick {};
+		class unlimitedAmmo {};
 		class dismiss {};
 	};
-
 };
