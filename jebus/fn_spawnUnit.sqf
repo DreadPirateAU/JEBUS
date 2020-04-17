@@ -30,4 +30,6 @@ if (!(_unitVarName isEqualTo "")) then {
 
 {_x addCuratorEditableObjects [units _newGroup,false]} forEach allCurators;
 
+[_newUnit] call jebus_fnc_unlimitedAmmo;
+
 _newUnit;
