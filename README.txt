@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.433
-Release Date: 2019/12/29
+Version: 1.45
+Release Date: 2020/4/17
 Author: DreadPirate
 
 Short Description:
@@ -59,6 +59,7 @@ this				= Leader of a group
 "INIT="				= Init string to run upon spawning
 				  (Use "_proxyThis" where you would usually use "this" in a script or function call)
 				  Default is empty string.
+"RECRUIT="			= Units in group can be recruited by players
 "DEBUG"				= Will provide debugging information
 
 Examples:
@@ -147,3 +148,6 @@ v1.432 (2019/6/1)	- Variable names are now *actually* saved for all group member
 			- Pause radius default is now 0
 v1.433 (2019/12/29)	- Vehicles spawn 2m off ground (Global Mobilization fix)
 			- Various tweaks and fixes
+v1.45 (2020/4/17)	- Major code rewrite
+			- Changed the Global Mobilization fix to use config entries
+			- Added a recruit function
