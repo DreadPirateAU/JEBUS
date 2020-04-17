@@ -14,7 +14,6 @@ _vehicleData params [
 	"_vehicleType"
 	,"_vehiclePos"
 	,"_vehicleDir"
-	,"_vehicleFuel"
 	,"_vehicleLocked"
 	,"_vehicleItemCargo"
 	,"_vehicleMagazineCargo"
@@ -41,8 +40,6 @@ if (_vehicleType isKindOf "gm_wheeled_base"  || _vehicleType isKindOf "gm_tracke
 _newVehicle = createVehicle [_vehicleType, _tmpRespawnPos, [], 0, _special];
 _newVehicle setDir _vehicleDir;
 
-_newGroup addVehicle _newVehicle;
-_newVehicle setFuel _vehicleFuel;
 _newVehicle lock _vehicleLocked;
 clearItemCargoGlobal _newVehicle;
 clearMagazineCargoGlobal _newVehicle;
