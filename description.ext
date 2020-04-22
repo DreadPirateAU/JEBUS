@@ -1,4 +1,5 @@
 class CfgFunctions
 {
 	#include "jebus\cfgFunctions.hpp"
+	#include "jim\cfgFunctions.hpp"
 }
