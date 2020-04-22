@@ -1,0 +1,9 @@
+class jim
+{
+	class main
+	{
+		file = "jim";
+		class zoneActivate {};
+		class zoneMonitor {};
+	};
+};
