@@ -1,5 +1,10 @@
 _excludedHouses = [
 	"Land_Pier_F"
+	,"Cargo_Tower_base_F" //All military towers
+	,"Cargo_HQ_base_F" //All military HQs
+	,"Cargo_Patrol_base_F"
+	,"Cargo_House_base_F"
+	,"Land_i_Garage_V1_F"
 	,"Land_dp_bigTank_F"
 	,"Land_nav_pier_m_F"
 	,"Land_Pier_small_F"
