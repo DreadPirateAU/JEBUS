@@ -1,15 +1,17 @@
-params ["_blackList"];
+params [
+	"_blackList"
+	,["_debug", false]
+];
 
 _start = diag_tickTime;
 
 _iedFrequency = 5;
-_debug = true;
 
 _iedList = ["IEDLandBig_F","IEDLandSmall_F","IEDUrbanBig_F","IEDUrbanSmall_F"];
 _numIEDs = 0;
 
-for "_xPos" from 100 to worldSize step 200 do {
-	for "_yPos" from 100 to worldSize step 200 do {
+for [{_xPos = 100},{_xPos < worldSize},{_xPos = _xPos + 200}] do {
+	for [{_yPos = 100},{_yPos < worldSize},{_yPos = _yPos + 200}] do {
 		_nearbyRoads = [_xPos, _yPos] nearRoads 100;
 		
 		if (count _nearbyRoads > 0) then {		

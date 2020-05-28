@@ -4,8 +4,10 @@ params ["_blackList"];
 
 _start = diag_tickTime;
 
-for "_xPos" from 100 to worldSize step 200 do {
-	for "_yPos" from 100 to worldSize step 200 do {
+allZones = [];
+
+for [{_xPos = 100},{_xPos < worldSize},{_xPos = _xPos + 200}] do {
+	for [{_yPos = 100},{_yPos < worldSize},{_yPos = _yPos + 200}] do {
 		_nearbyHouses = nearestObjects [[_xPos, _yPos], ["House"], 100];
 		if (count _nearbyHouses > 0) then {
 			{
@@ -26,6 +28,8 @@ for "_xPos" from 100 to worldSize step 200 do {
 			_markerName setMarkerColor "ColorEAST";
 			_markerName setMarkerAlpha 0.5;
 			_zone = createVehicle["Sign_Arrow_Yellow_F", [_xPos, _yPos], [], 0, "CAN_COLLIDE"];
+			allZones pushback _zone;
+			hideObjectGlobal _zone;
 			_zone setVariable ["Active", false];
 			_zone setVariable ["Marker", _markerName];
 			_buildingPositions = [];
@@ -39,3 +43,4 @@ for "_xPos" from 100 to worldSize step 200 do {
 
 _stop = diag_tickTime;
 diag_log format ["Time to generate Zones: %1",_stop - _start];
+missionNameSpace setVariable["zonesCreated", true];

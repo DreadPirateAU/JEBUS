@@ -1,9 +1,10 @@
 _excludedHouses = [
 	"Land_Pier_F"
-	,"Cargo_Tower_base_F" //All military towers
-	,"Cargo_HQ_base_F" //All military HQs
-	,"Cargo_Patrol_base_F"
-	,"Cargo_House_base_F"
+	,"Land_Cargo_House_V1_F"
+	,"Land_Cargo_Patrol_V1_F"
+	,"Land_u_Shed_Ind_F"
+	,"Land_d_House_Small_01_V1_F"
+	,"Land_i_Garage_V2_dam_F"
 	,"Land_i_Garage_V1_F"
 	,"Land_dp_bigTank_F"
 	,"Land_nav_pier_m_F"
@@ -44,4 +45,5 @@ _excludedHouses = [
 	,"Land_Molo_drevo_end"
 	,"Land_Hut06"
 	,"Land_Telek1"
+	,"Land_d_Addon_02_V1_F"
 ];
