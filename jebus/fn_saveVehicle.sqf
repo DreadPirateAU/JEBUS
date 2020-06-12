@@ -18,7 +18,6 @@ _vehicle = vehicle _unit;
 _vehicleData pushBack (typeOf _vehicle);
 _vehicleData pushBack (getPos _vehicle);
 _vehicleData pushBack (getDir _vehicle);
-_vehicleData pushBack (fuel _vehicle);
 _vehicleData pushBack (locked _vehicle);
 _vehicleData pushBack (itemCargo _vehicle);
 _vehicleData pushBack (magazineCargo _vehicle);
