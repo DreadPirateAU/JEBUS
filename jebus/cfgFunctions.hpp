@@ -11,6 +11,7 @@ class jebus
 		class reduce {};
 		class cache {};
 		class recruit {};
+		class saveCrewMember {};
 		class saveGroup {};
 		class saveUnit {};
 		class saveVehicle {};
