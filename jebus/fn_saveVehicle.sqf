@@ -38,8 +38,8 @@ _vehicleData pushBack vehicleVarName _vehicle;
 
 _crewData = [];
 {
-	_crewData pushBack ([_x] call jebus_fnc_saveUnit);
-} forEach (crew _vehicle);
+	_crewData pushBack ([_x] call jebus_fnc_saveCrewMember);
+} forEach (fullCrew _vehicle);
 
 _vehicleData pushBack _crewData;
 

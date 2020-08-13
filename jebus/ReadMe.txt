@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.45
-Release Date: 2020/4/17
+Version: 1.451
+Release Date: 2020/8/13
 Author: DreadPirate
 
 Short Description:
@@ -151,3 +151,4 @@ v1.433 (2019/12/29)	- Vehicles spawn 2m off ground (Global Mobilization fix)
 v1.45 (2020/4/17)	- Major code rewrite
 			- Changed the Global Mobilization fix to use config entries
 			- Added a recruit function
+v1.451 (2020/8/13)	- Fixed crew member roles not being assigned correctly
