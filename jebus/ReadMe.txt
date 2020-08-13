@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.45
-Release Date: 2020/4/17
+Version: 1.451
+Release Date: 2020/8/13
 Author: DreadPirate
 
 Short Description:
