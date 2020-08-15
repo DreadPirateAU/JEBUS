@@ -39,14 +39,14 @@ for [{_i = 0},{_i < (2 + floor(random 3))},{_i = _i + 1}] do {
 [_patrolGroup, _zonePos, 50] call BIS_fnc_taskPatrol;
 //[leader _group,100,5,4,true] execVM "tog_garrison_script.sqf";
 
-while {[_zonePos, 500] call jebus_fnc_playerInRadius} do {
-	if ([_zonePos, 100] call jebus_fnc_playerInRadius && ({alive _x} count (units _patrolGroup + units _garrisonGroup)) < 1) exitWith {
+while {[_zonePos, east, 500] call jebus_fnc_enemyInRadius} do {
+	if ([_zonePos, east, 100] call jebus_fnc_enemyInRadius && ({alive _x} count (units _patrolGroup + units _garrisonGroup)) < 1) exitWith {
 		deleteVehicle _zone;
 		_marker setMarkerAlpha 0.5;
 		_marker setMarkerColor "ColorGreen";
 	};
 	
-	sleep 1;
+	sleep 30;
 };
 
 if (!isNull _zone) then {
