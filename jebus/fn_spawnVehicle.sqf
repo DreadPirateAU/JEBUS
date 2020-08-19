@@ -35,6 +35,16 @@ if (_vehicleType isKindOf "gm_wheeled_base"  || _vehicleType isKindOf "gm_tracke
 		,_tmpRespawnPos select 1
 		,(_tmpRespawnPos select 2) + 2
 	];
+} else {
+	_tmpRespawnPos = [
+		_tmpRespawnPos select 0
+		,_tmpRespawnPos select 1
+		,(_tmpRespawnPos select 2) + 0.1
+	];
+};
+
+if (_vehicleType isKindOf "StaticWeapon") then {
+	_special = "CAN_COLLIDE";
 };
 
 _newVehicle = createVehicle [_vehicleType, _tmpRespawnPos, [], 0, _special];
@@ -84,7 +94,5 @@ if (_newVehicle isKindOf "Plane" && (_vehiclePos select 2 > 50)) then {
 		0
 	];
 };
-
-{_x addCuratorEditableObjects [[_newVehicle], true]} forEach allCurators;
 
 _newVehicle;

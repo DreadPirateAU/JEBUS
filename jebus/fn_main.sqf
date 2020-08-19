@@ -19,17 +19,13 @@ private [
     ,"_pauseRadius"
     ,"_reduceRadius"
     ,"_respawnDelay"
-    ,"_respawnDir"
     ,"_respawnMarkers"
     ,"_respawnPos"
     ,"_special"
-    ,"_tmpGroup"
     ,"_tmpRespawnPos"
     ,"_tmpZone"
     ,"_trigger"
-    ,"_unitGroup"
     ,"_unitSide"
-    ,"_unitsInGroup"
     ,"_synchronizedObjectsList"
 ];
  
@@ -39,11 +35,7 @@ _unit = _this select 0;
 if (typeName _unit == "GROUP") then { _unit = leader _unit; };
  
 _respawnPos = getPos _unit;
-_respawnDir = getDir _unit;
 _unitSide = side _unit;
- 
-_unitGroup = (group _unit);
-_unitsInGroup = units _unitGroup;
  
 _synchronizedObjectsList = [];
 _respawnPosList = [];
@@ -113,7 +105,7 @@ _syncs = synchronizedObjects _unit;
 
 //Save unit data and delete
 _groupData =  [_unit] call jebus_fnc_saveGroup;
-[_unit] call jebus_fnc_deleteGroup;
+[group _unit] call jebus_fnc_deleteGroup;
  
 _firstLoop = true;
  
@@ -135,12 +127,6 @@ while { _lives != 0 } do {
         _firstLoop = false;
         if (_debug) then {systemChat "First Loop!"};
     };
-    
-    _newGroup = createGroup _unitSide;
-    _newGroup setVariable ["groupInitialising", true, false];
-	_displayName = str _newGroup;
-
-    if (_debug) then {systemChat format["Spawning group: %1", _displayName]};
 
     _tmpRespawnPos = selectRandom _respawnPosList;
  
@@ -149,9 +135,13 @@ while { _lives != 0 } do {
         sleep 5;
     };
  
-	//copyToClipboard str _groupData;
-    //Spawn vehicles - spawn, disable sim, add crew, enable sim......
+    //Spawn group.....
 	_newGroup = [_groupData, _tmpRespawnPos, _special] call jebus_fnc_spawnGroup;
+	_displayName = str _newGroup;
+
+    if (_debug) then {systemChat format["Spawning group: %1", _displayName]};
+	
+	_newGroup deleteGroupWhenEmpty true;
 	
     //Initiate caching
     if ("CACHE=" in _this) then {
@@ -230,15 +220,8 @@ while { _lives != 0 } do {
         {systemChat format["Lives remaining = %1", _lives]};
     };
  
-    //Clean up empty groups
-    {
-          if ((count (units _x)) isEqualTo 0) then {
-            if (isNil {_x getVariable "groupInitialising"}) then {
-               deleteGroup _x;
-            };
-          };
-     } count allGroups;
- 
+    //Clean up empty group
+	deleteGroup _newGroup;
 };
  
 if (_debug) then {systemChat "Exiting script."};

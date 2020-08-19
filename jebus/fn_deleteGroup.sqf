@@ -1,6 +1,8 @@
-params ["_unit"];
+params ["_group"];
 
 {
 	deleteVehicle (vehicle _x); 
 	deleteVehicle _x
-} forEach units (group _unit);
+} forEach units (_group);
+
+deleteGroup _group;

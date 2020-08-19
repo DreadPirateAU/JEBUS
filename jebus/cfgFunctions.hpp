@@ -22,6 +22,7 @@ class jebus
 		class applyWaypoints {};
 		class unstick {};
 		class unlimitedAmmo {};
+		class updateZeus {postInit = 1;};
 		class dismiss {};
 	};
 };

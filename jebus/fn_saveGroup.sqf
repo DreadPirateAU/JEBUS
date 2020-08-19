@@ -38,8 +38,15 @@ _waypoints = [_unitGroup] call jebus_fnc_saveWaypoints;
     if ( (vehicle _x) == _x) then {
 		_infantryData pushBack ([_x] call jebus_fnc_saveUnit);
     } else {
-		if (!(driver (vehicle _x) == _x)) exitWith {};
-		_vehicleData pushBack ([vehicle _x] call jebus_fnc_saveVehicle);
+		//Normal vehicles have drivers
+		if (driver (vehicle _x) == _x) then {
+			_vehicleData pushBack ([vehicle _x] call jebus_fnc_saveVehicle);
+		} else {
+			//Static Weapons have gunners
+			if ((gunner (vehicle _x) == _x) && ((vehicle _x) isKindOf "StaticWeapon")) then {
+				_vehicleData pushBack ([vehicle _x] call jebus_fnc_saveVehicle);
+			};
+		};
 	};
 } forEach _unitsInGroup;
 

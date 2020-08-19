@@ -16,7 +16,8 @@ _groupData params [
 	,"_waypoints"
 ];
 
- _newGroup = createGroup _unitSide;
+_newGroup = createGroup _unitSide;
+waitUntil {!isNull _newGroup};
 
 {
 	_relativePos = (_x # 1) vectorDiff (_vehicleData # 0 # 1);
@@ -27,7 +28,7 @@ _groupData params [
  
 {
 	private "_relativePos";
-	
+		
 	if (_vehicleData isEqualTo []) then {
 		_relativePos = (_x # 1) vectorDiff (_infantryData # 0 # 1);
 	} else {
