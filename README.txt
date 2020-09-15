@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
-Version: 1.452
-Release Date: 2020/8/19
+Version: 1.453
+Release Date: 2020/9/15
 Author: DreadPirate
 
 Short Description:
@@ -155,3 +155,4 @@ v1.451 (2020/8/13)	- Fixed crew member roles not being assigned correctly
 v1.452 (2020/8/19) 	- Fixed empty groups not being deleted
 					- Changed how units are added to Zeus
 					- Support for static weapons
+v1.453 (2020/9/15) 	- Fixed drone support
