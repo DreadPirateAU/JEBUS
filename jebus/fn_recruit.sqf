@@ -28,7 +28,6 @@ _recruit = {
 	_title = format["Recruit %1 (%2)", name _unit, _displayName];
 	_condition = "leader (group _this) == _this";
 	_radius = 3;
-	//_unit addAction[_title, _recruit, [], 0, false, true, "", _condition, _radius];
 	[_unit, [_title, _recruit, [], 0, false, true, "", _condition, _radius]] remoteExec["addAction"];
 	
 	//Add unstick action
@@ -36,5 +35,3 @@ _recruit = {
 	_condition = "_target in (groupSelectedUnits player)";
 	[_unit, [_title, jebus_fnc_unstick, [], 0, false, true, "", _condition]] remoteExec["addAction"];
 } forEach (units _group);
-
-//_x setPos (player modelToWorld [0,-2,0.5]); _x enableAI "ALL"} forEach (groupSelectedUnits player)

@@ -1,3 +1,4 @@
+// 0 = [this] spawn jebus_fnc_main;
 // 0 = [this, <other parameters>] spawn jebus_fnc_main;
 // 0 = [this, "LIVES=",1] spawn jebus_fnc_main;
 
@@ -12,10 +13,12 @@ private [
     ,"_firstLoop"
     ,"_gaiaParameter"
     ,"_gaiaZone"
+	,"_groupID"
     ,"_initString"
     ,"_initialDelay"
     ,"_lives"
     ,"_newGroup"
+	,"_parameters"
     ,"_pauseRadius"
     ,"_reduceRadius"
     ,"_respawnDelay"
@@ -28,14 +31,19 @@ private [
     ,"_unitSide"
     ,"_synchronizedObjectsList"
 ];
+
+_parameters = _this;
  
-_unit = _this select 0;
+_unit = _parameters select 0;
  
 // Make sure unit is a unit and not a group (Thanks to S.Crowe)
 if (typeName _unit == "GROUP") then { _unit = leader _unit; };
- 
-_respawnPos = getPos _unit;
+
+_respawnPos = getPosATL  _unit;
+
+_groupID = groupId (group _unit);
 _unitSide = side _unit;
+_displayName = format ["%1 - %2", _unitSide, _groupID];
  
 _synchronizedObjectsList = [];
 _respawnPosList = [];
@@ -55,23 +63,27 @@ _respawnMarkers = [];
 _initString = "";
 _recruit = false;
 _debug = false;
- 
+
 //Get parameters
-for "_parameterIndex" from 1 to (count _this - 1) do {
-    switch (_this select _parameterIndex) do {
-        case "LIVES=" : {_lives = _this select (_parameterIndex + 1)};
-        case "DELAY=" : {_respawnDelay =  _this select (_parameterIndex + 1)};
-        case "START=" : {_initialDelay = _this select (_parameterIndex + 1)};
-        case "CACHE=" : {_cacheRadius =  _this select (_parameterIndex + 1)};
-        case "REDUCE=" : {_reduceRadius =  _this select (_parameterIndex + 1)};
-        case "GAIA_MOVE=" : {_gaiaParameter = "MOVE"; _gaiaZone = _this select (_parameterIndex + 1)};
-        case "GAIA_NOFOLLOW=" : {_gaiaParameter = "NOFOLLOW"; _gaiaZone =  _this select (_parameterIndex + 1)};
-        case "GAIA_FORTIFY=" : {_gaiaParameter = "FORTIFY"; _gaiaZone = _this select (_parameterIndex + 1)};
+for "_parameterIndex" from 1 to (count _parameters - 1) do {
+	_currentParameter = _parameters select _parameterIndex;
+	if (typeName _currentParameter == "STRING") then {
+		_currentParameter = toUpper _currentParameter;
+	};
+    switch (_currentParameter) do {
+        case "LIVES=" : {_lives = _parameters select (_parameterIndex + 1)};
+        case "DELAY=" : {_respawnDelay =  _parameters select (_parameterIndex + 1)};
+        case "START=" : {_initialDelay = _parameters select (_parameterIndex + 1)};
+        case "CACHE=" : {_cacheRadius =  _parameters select (_parameterIndex + 1)};
+        case "REDUCE=" : {_reduceRadius =  _parameters select (_parameterIndex + 1)};
+        case "GAIA_MOVE=" : {_gaiaParameter = "MOVE"; _gaiaZone = _parameters select (_parameterIndex + 1)};
+        case "GAIA_NOFOLLOW=" : {_gaiaParameter = "NOFOLLOW"; _gaiaZone =  _parameters select (_parameterIndex + 1)};
+        case "GAIA_FORTIFY=" : {_gaiaParameter = "FORTIFY"; _gaiaZone = _parameters select (_parameterIndex + 1)};
         case "FLYING" : {_special = "FLY"};
-        case "RESPAWNMARKERS=" : {_respawnMarkers = _this select (_parameterIndex + 1)};
-        case "PAUSE=" : {_pauseRadius = _this select (_parameterIndex + 1)};
-        case "EXIT=" : {_exitTrigger = _this select (_parameterIndex + 1)};
-        case "INIT=" : {_initString = _this select (_parameterIndex + 1)};
+        case "RESPAWNMARKERS=" : {_respawnMarkers = _parameters select (_parameterIndex + 1)};
+        case "PAUSE=" : {_pauseRadius = _parameters select (_parameterIndex + 1)};
+        case "EXIT=" : {_exitTrigger = _parameters select (_parameterIndex + 1)};
+        case "INIT=" : {_initString = _parameters select (_parameterIndex + 1)};
 		case "RECRUIT" : {_recruit = true};
         case "DEBUG" : {_debug = true};
     };
@@ -95,7 +107,7 @@ _syncs = synchronizedObjects _unit;
     if (_x isKindOf "EmptyDetector") then
     {
         _trigger = _x;
-        if (_debug) then {systemChat "Synchronized trigger activation present"};
+        if (_debug) then {systemChat format["%1 - Synchronized trigger activation present", _displayName]};
     }
     else
     {
@@ -116,7 +128,9 @@ while { _lives != 0 } do {
     //Wait for trigger activation (Thanks to pritchardgsd)
     if (! isNil "_trigger") then {
 		waituntil {
-			if (_debug && (floor ((time % 10)) == 0)) then {systemChat "Waiting for trigger activation"};
+			if (_debug && (floor ((time % 10)) == 0)) then {
+				systemChat format["%1 - Waiting for trigger activation", _displayName]
+			};
 			sleep 1;
 			(triggerActivated _trigger);
 		};
@@ -125,7 +139,7 @@ while { _lives != 0 } do {
     if (_firstLoop && _initialDelay > 0) then {
         sleep _initialDelay;
         _firstLoop = false;
-        if (_debug) then {systemChat "First Loop!"};
+        if (_debug) then {systemChat format["%1 - First Loop", _displayName]};
     };
 
     _tmpRespawnPos = selectRandom _respawnPosList;
@@ -137,19 +151,20 @@ while { _lives != 0 } do {
  
     //Spawn group.....
 	_newGroup = [_groupData, _tmpRespawnPos, _special] call jebus_fnc_spawnGroup;
-	_displayName = str _newGroup;
+	_newGroup setGroupIDGlobal [_groupID];
+	_displayName = format ["%1 - %2", side _newGroup, groupId _newGroup];
 
     if (_debug) then {systemChat format["Spawning group: %1", _displayName]};
 	
 	_newGroup deleteGroupWhenEmpty true;
 	
     //Initiate caching
-    if ("CACHE=" in _this) then {
+    if (_cacheRadius > 0) then {
         [_newGroup, _cacheRadius, _debug] spawn jebus_fnc_cache;
     };
    
     //Initiate reducing
-    if ("REDUCE=" in _this) then {
+    if (_reduceRadius > 0 && _cacheRadius == 0) then {
         [_newGroup, _reduceRadius, _debug] spawn jebus_fnc_reduce;
     };
 
@@ -161,7 +176,7 @@ while { _lives != 0 } do {
    
     //Initiate GAIA
     if (_gaiaParameter in ["MOVE", "NOFOLLOW", "FORTIFY"]) then {
-        if (_debug) then {systemChat format["%1 : %2", _newGroup, _gaiaParameter]};
+        if (_debug) then {systemChat format["%1 - %2 : %3", _displayName, _gaiaParameter, _gaiaZone]};
         switch (typeName _gaiaZone) do {
             case "ARRAY" : {
                 _tmpZone = selectRandom _gaiaZone;
@@ -175,7 +190,7 @@ while { _lives != 0 } do {
     }; 
    
     //Add synchonizations and execute init string
-    _proxyThis = leader _newgroup;
+    _proxyThis = leader _newGroup;
  
     {
         _proxyThis synchronizeObjectsAdd [_x];
@@ -188,7 +203,7 @@ while { _lives != 0 } do {
     //Check every 5 seconds to see if group is eliminated
     waituntil {
         sleep 5;
-        {alive _x} count (units _newGroup) < 1;
+		(units _newGroup) findIf {alive _x} == -1;
     };
  
     if (_debug) then {systemChat format ["%1 eliminated. Waiting for respawn.", _displayName]};
@@ -198,17 +213,17 @@ while { _lives != 0 } do {
         _minTime = _respawnDelay select 0;
         _maxTime = _respawnDelay select 1;
         _tempRespawnDelay = _minTime + random (_maxTime - _minTime);
-        if (_debug) then {systemChat format ["Respawn delay = %1 seconds", _tempRespawnDelay]};
+        if (_debug) then {systemChat format ["%1 Respawn delay = %2 seconds", _displayName, _tempRespawnDelay]};
         sleep _tempRespawnDelay;
     } else {
-        if (_debug) then {systemChat format ["Respawn delay = %1 seconds", _respawnDelay]};
+        if (_debug) then {systemChat format ["%1 Respawn delay = %2 seconds", _displayName, _respawnDelay]};
         sleep _respawnDelay;
     };
  
     //Check if exit trigger has been activated
     if (! isNil "_exitTrigger") then {
         if (triggerActivated _exitTrigger) then {
-            if (_debug) then {systemChat "Exit trigger activated"};
+            if (_debug) then {systemChat format["%1 Exit trigger activated", _displayName]};
             _lives = 1;
         };
     };
@@ -216,12 +231,15 @@ while { _lives != 0 } do {
     _lives = _lives - 1;
  
     if (_debug) then {
-        if (_lives < 0) then {systemChat "Infinite lives."} else
-        {systemChat format["Lives remaining = %1", _lives]};
+        if (_lives < 0) then {
+			systemChat format["%1 Infinite lives", _displayName];
+		} else {
+			systemChat format["%1 Lives remaining = %2", _displayName, _lives];
+		};
     };
  
     //Clean up empty group
 	deleteGroup _newGroup;
 };
  
-if (_debug) then {systemChat "Exiting script."};
+if (_debug) then {systemChat format["%1 Exiting script", _displayName]};

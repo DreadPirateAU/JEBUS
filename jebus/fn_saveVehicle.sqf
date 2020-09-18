@@ -1,7 +1,6 @@
 //Save vehicle data
 // [<unit>] call jebus_fnc_saveVehicle;
 // Returns an array
-// [<vehicleType>, <unitLoadout>, <unitSkill>]
 
 if (!isServer) exitWith {};
 
@@ -16,17 +15,16 @@ _vehicleData = [];
 _vehicle = vehicle _unit;
 
 _vehicleData pushBack (typeOf _vehicle);
-_vehicleData pushBack (getPos _vehicle);
+_vehicleData pushBack (getPosATL _vehicle);
 _vehicleData pushBack (getDir _vehicle);
 _vehicleData pushBack (locked _vehicle);
+_vehicleData pushBack (fuel _vehicle);
 _vehicleData pushBack (itemCargo _vehicle);
 _vehicleData pushBack (magazineCargo _vehicle);
 _vehicleData pushBack (weaponCargo _vehicle);
 _vehicleData pushBack (backpackCargo _vehicle);
-_vehicleData pushBack (getPylonMagazines _vehicle);
 _vehicleData pushBack (getObjectMaterials _vehicle);
 _vehicleData pushBack (getObjectTextures _vehicle);
-
 _thisAnimationNames = animationNames _vehicle;
 _thisAnimationPhases = [];
 {

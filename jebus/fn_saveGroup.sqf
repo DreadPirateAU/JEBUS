@@ -7,7 +7,6 @@ if (!isServer) exitWith {};
 
 params [
 	"_unit"
-	,"_delete"
 ];
 
 // Make sure unit is a unit and not a group (Thanks to S.Crowe)
