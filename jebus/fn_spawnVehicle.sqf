@@ -43,6 +43,10 @@ if (_vehicleType isKindOf "StaticWeapon") then {
 	_special = "CAN_COLLIDE";
 };
 
+if (_vehicleType isKindOf "Ship") then {
+	_tmpRespawnPos = ATLToASL _tmpRespawnPos;
+};
+
 _newVehicle = createVehicle [_vehicleType, _tmpRespawnPos, [], 0, _special];
 waitUntil {alive _newVehicle};
 _newVehicle setDir _vehicleDir;
