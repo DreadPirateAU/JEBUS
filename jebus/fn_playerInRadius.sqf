@@ -14,10 +14,8 @@ if ((player distance2D _position) < _radius) then {
 	_returnValue = true;
 };
 
-//if (isMultiplayer) then {
 {
 	if ((_x distance2D _position) < _radius) exitWith { _returnValue = true; };
 } forEach playableUnits;
-//};
 
 _returnValue;

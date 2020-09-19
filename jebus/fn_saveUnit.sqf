@@ -12,7 +12,7 @@ private ["_unitData"];
 _unitData = [];
 
 _unitData pushBack (typeOf _unit);
-_unitData pushBack (getPos _unit);
+_unitData pushBack (getPosATL _unit);
 _unitData pushBack (getUnitLoadout _unit);
 _unitData pushBack (skill _unit);
 _unitData pushBack (vehicleVarName _unit);
