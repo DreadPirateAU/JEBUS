@@ -47,6 +47,12 @@ if (_vehicleType isKindOf "Ship") then {
 	_tmpRespawnPos = ATLToASL _tmpRespawnPos;
 };
 
+waitUntil {
+	_testPos = _tmpRespawnPos;
+	if (surfaceIsWater _testPos) then {_testPos = ATLToASL _testPos};
+	(count nearestObjects[_testPos, ["LandVehicle","Helicopter","Ship"], sizeOf _vehicleType, false]) == 0
+};
+
 _newVehicle = createVehicle [_vehicleType, _tmpRespawnPos, [], 0, _special];
 waitUntil {alive _newVehicle};
 _newVehicle setDir _vehicleDir;

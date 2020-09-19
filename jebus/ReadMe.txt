@@ -1,6 +1,6 @@
 Jebus - Just Editor Based Unit Spawning
 Version: 1.454
-Release Date: 2020/9/18
+Release Date: 2020/9/19
 Author: DreadPirate
 
 Short Description:
@@ -159,6 +159,6 @@ v1.452 (2020/8/19) 	- Fixed empty groups not being deleted
 					- Changed how units are added to Zeus
 					- Support for static weapons
 v1.453 (2020/9/15) 	- Fixed drone support
-v1.454 (2020/9/18) 	- Group ID is saved
+v1.454 (2020/9/19) 	- Group ID is saved
 					- Unit elevation is saved. Groups can be spawned in buildings, on ships, etc.
 					- Dynamic Loadout support withdrawn for now (It wasn't working properly anyway)
