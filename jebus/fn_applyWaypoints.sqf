@@ -21,5 +21,6 @@ if (!(_waypointList isEqualTo [])) then {
 		_newWaypoint setwaypointStatements (_currentWaypoint select 7);
 		_newWaypoint setwaypointTimeout (_currentWaypoint select 8);
 		_newWaypoint setwaypointType (_currentWaypoint select 9);
+		_newWaypoint setWaypointName (_currentWaypoint select 10);
 	};
 };

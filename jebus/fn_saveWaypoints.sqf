@@ -23,6 +23,7 @@ if (count (waypoints _unitGroup) > 1) then {
 		_currentWaypoint pushBack waypointStatements [_unitGroup, _waypointIndex];
 		_currentWaypoint pushBack waypointTimeout [_unitGroup, _waypointIndex];
 		_currentWaypoint pushBack waypointType [_unitGroup, _waypointIndex];
+		_currentWaypoint pushBack waypointName [_unitGroup, _waypointIndex];
 
 		_waypointList set [_waypointIndex, _currentWaypoint];
 	};
