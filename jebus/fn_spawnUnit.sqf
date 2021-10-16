@@ -18,6 +18,7 @@ _unitData params [
 	,"_unitLoadout"
 	,"_unitSkill"
 	,"_unitVarName"
+	,"_unitInsignia"
 ];
 
 if (_spawnPos select 2 < 0) then {
@@ -40,6 +41,10 @@ if (!(_unitVarName isEqualTo "")) then {
 	[_newUnit, _unitVarName] remoteExec ["setVehicleVarName", 0, _newUnit];
 	missionNamespace setVariable [_unitVarName, _newUnit, true];
 };
+if (!(_unitInsignia isEqualTo "")) then {
+	_newUnit setObjectTextureGlobal [1, _unitInsignia];
+};
+
 
 [_newUnit] call jebus_fnc_unlimitedAmmo;
 

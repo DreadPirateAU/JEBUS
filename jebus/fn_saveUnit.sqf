@@ -16,5 +16,6 @@ _unitData pushBack (getPosATL _unit);
 _unitData pushBack (getUnitLoadout _unit);
 _unitData pushBack (skill _unit);
 _unitData pushBack (vehicleVarName _unit);
+_unitData pushBack (getObjectTextures _unit # 1);
 
 _unitData;
